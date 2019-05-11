@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Kayıt İşlemi";
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-primary">Yönlendiriliyorsunuz...</h4>
+        </div>
+        <div class="col-md-12">
+            <div class="alert alert-success" role="alert">
+                <span class="text-center"><i class="fas fa-ok"></i></span><p>&nbsp;Kayıt Oldunuz..</p>
+                <p class="text-justify">
+                    Lütfen e-posta adresinize gönderdiğimiz aktivasyon linki'ne tıklayarak hesabınızı aktive ediniz.
+                    Hesabınızı aktive etmeden not ekleyemez ve beğenme yapamazsınız.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+
+    setTimeout(function() {
+
+        window.location = "/Home/Index";
+
+    },8000);
+
+
+</script>

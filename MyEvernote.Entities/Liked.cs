@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyEvernote.Entities.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace MyEvernote.Entities
 {
     [Table("Likes")]
-    public class Liked
+    public class Liked:IEntity
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int  Id { get; set; } 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyEvernote.Entities.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace MyEvernote.Entities
 {
     [Table("EvernoteUsers")]
-    public class EvernoteUser:MyEntityBase
+    public class EvernoteUser:MyEntityBase, IEntity
     {
         [StringLength(25)]
         public string Name { get; set; }

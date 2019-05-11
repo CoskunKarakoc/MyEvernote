@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3EFF8296-3416-4474-8C82-918266624FCF}</ProjectGuid>
+    <ProjectGuid>{CB946BE2-D57C-4A66-A4CB-E6F3B333D686}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyEvernote.DataAccessLayer</RootNamespace>
-    <AssemblyName>MyEvernote.DataAccessLayer</AssemblyName>
+    <RootNamespace>MyEvernote.Common</RootNamespace>
+    <AssemblyName>MyEvernote.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,17 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0-preview5-19254-05\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0-preview5-19254-05\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FakeData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FakeData.1.0.0\lib\FakeData.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,27 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityFramework\Abstract\IRepository.cs" />
-    <Compile Include="EntityFramework\Concrete\Repository.cs" />
-    <Compile Include="EntityFramework\Concrete\RepositoryBase.cs" />
-    <Compile Include="EntityFramework\DatabaseContext.cs" />
-    <Compile Include="EntityFramework\MyInitializer.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="DefaultCommon.cs" />
+    <Compile Include="ICommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MyEvernote.Common\MyEvernote.Common.csproj">
-      <Project>{cb946be2-d57c-4a66-a4cb-e6f3b333d686}</Project>
-      <Name>MyEvernote.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyEvernote.Entities\MyEvernote.Entities.csproj">
-      <Project>{0388e153-cc0f-45e3-b529-1fd7e71cc793}</Project>
-      <Name>MyEvernote.Entities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

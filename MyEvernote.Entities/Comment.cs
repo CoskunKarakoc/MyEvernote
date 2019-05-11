@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyEvernote.Entities.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace MyEvernote.Entities
 {
     [Table("Comments")]
-    public class Comment:MyEntityBase
+    public class Comment:MyEntityBase, IEntity
     {
         [Required,StringLength(300)]
         public string Text { get; set; }

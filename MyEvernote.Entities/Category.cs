@@ -6,11 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using MyEvernote.Entities.Abstract;
 
 namespace MyEvernote.Entities
 {
     [Table("Categories")]
-    public class Category:MyEntityBase
+    public class Category:MyEntityBase,IEntity
     {
         public Category()
         {
