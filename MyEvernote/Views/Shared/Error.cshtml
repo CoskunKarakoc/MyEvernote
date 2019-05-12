@@ -1,0 +1,50 @@
+﻿@using MyEvernote.Entities.Messages
+@using MyEvernote.ViewModels
+@model  ErrorViewModel
+@{
+    ViewBag.Title = @Model.Title;
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-danger text-center">@Model.Header</h4>
+        </div>
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <span class="text-center"><i class="fas fa-remove"></i></span><p>&nbsp;@Model.Title</p>
+                <div class="text-justify">
+                    @foreach (ErrorMessageObj msg in @Model.List)
+                    {
+                        <p class="text-danger">@msg.Message</p><br />
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@{
+    string js = string.Empty;
+    js = " setTimeout(function() {window.location ='" + Model.RedirectingUrl + "';},'" + Model.RedirectingTimeOut + "');";
+}
+
+<script>
+
+    $(function() {
+
+        @Html.Raw(js);
+
+
+
+
+
+
+    });
+
+
+</script>

@@ -1,0 +1,49 @@
+﻿@using MyEvernote.ViewModels
+@model  InfoViewModel
+@{
+    ViewBag.Title = @Model.Title;
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-info text-center">@Model.Header</h4>
+        </div>
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <span class="text-center"><i class="fas fa-info"></i></span><p>&nbsp;@Model.Title</p>
+                <div class="text-justify">
+                    @foreach (string msg in @Model.List)
+                    {
+                        <p class="text-info">@msg</p><br />
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@{
+    string js = string.Empty;
+    js = " setTimeout(function() {window.location ='" + Model.RedirectingUrl + "';},'" + Model.RedirectingTimeOut + "');";
+}
+
+<script>
+
+    $(function() {
+
+        @Html.Raw(js);
+
+
+
+
+
+
+    });
+
+
+</script>

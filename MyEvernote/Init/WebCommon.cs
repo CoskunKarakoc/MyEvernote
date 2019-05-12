@@ -18,7 +18,7 @@ namespace MyEvernote.Init
 
             }
 
-            return null;
+            return "System";
 
         }
     }

@@ -15,24 +15,20 @@
     <!--Custom styles-->
 
     <link href="~/Content/Login-Register.css" rel="stylesheet" />
-    @RenderSection("Head",false)
+    @RenderSection("Head", false)
 </head>
 <body>
     <div class="container">
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>@ViewBag.Title</h3>
-                    <div class="d-flex justify-content-end social_icon">
-                        <span><i class="fab fa-facebook-square"></i></span>
-                        <span><i class="fab fa-google-plus-square"></i></span>
-                        <span><i class="fab fa-twitter-square"></i></span>
-                    </div>
+                    <h3 class="text-center">@ViewBag.Title</h3>
+                    @RenderSection("Social", false)
                 </div>
                 <div class="card-body">
-                  @RenderBody()
+                    @RenderBody()
                 </div>
-                @RenderSection("Footer",false)
+                @RenderSection("Footer", false)
             </div>
         </div>
     </div>

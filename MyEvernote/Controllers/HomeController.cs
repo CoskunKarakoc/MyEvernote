@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using MyEvernote.BusinessLayer;
 using MyEvernote.Entities;
 using MyEvernote.Entities.DataTransferObjects;
+using MyEvernote.Entities.Messages;
+using MyEvernote.ViewModels;
 
 
 namespace MyEvernote.Controllers
@@ -23,8 +25,9 @@ namespace MyEvernote.Controllers
                 return View(TempData["category"] as List<Note>);
             }
             NoteManager noteManager = new NoteManager();
-            //noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn);
-            return View(noteManager.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList());
+            
+            //noteManager.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList()
+            return View(noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn));
         }
 
 
@@ -40,12 +43,39 @@ namespace MyEvernote.Controllers
         }
 
 
+        public ActionResult ShowProfile()
+        {
+           EvernoteUser user=Session["login"] as EvernoteUser;
+           EvernoteUserManager manager=new EvernoteUserManager();
+           BusinessLayerResult<EvernoteUser> result = manager.GetUserById(user.Id);
+
+           if (result.Errors.Count>0)
+           {
+               foreach (ErrorMessageObj error in result.Errors)
+               {
+                  //TODO: Hata olduğunda yönlenecek kısım
+               }
+           }
+           
+            return View(result.Result);
+        }
+
+        public ActionResult EditProfile()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult EditProfile(EvernoteUser user)
+        {
+            return View();
+        }
+
+        public ActionResult RemoveProfile()
+        {
+            return View();
+        }
         public ActionResult Login()
         {
-
-
-
-
             return View();
         }
         [HttpPost]
@@ -54,20 +84,47 @@ namespace MyEvernote.Controllers
             EvernoteUserManager manager = new EvernoteUserManager();
             if (ModelState.IsValid)
             {
-                BusinessLayerResult<EvernoteUser> user= manager.LoginUser(model);
-                if (user.Errors.Count>0)
+                BusinessLayerResult<EvernoteUser> user = manager.LoginUser(model);
+                if (user.Errors.Count > 0)
                 {
-                    user.Errors.ForEach(x=>ModelState.AddModelError("",x.Message));
+                    //user.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
+                    foreach (var err in user.Errors)
+                    {
+                        ModelState.AddModelError(err.Code.ToString(),err.Message);
+                    }
                     return View(model);
                 }
 
                 Session["login"] = user.Result;
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);
         }
-            
+
+
+        public ActionResult Test()
+        {
+            ErrorViewModel model=new ErrorViewModel()
+            {
+                
+                Title = "uyarı",
+                Header = "İşlem uyarılı",
+                IsRedirecting = true,
+                RedirectingTimeOut = 8000,
+                RedirectingUrl = "/Home/Index",
+                List = new List<ErrorMessageObj>()
+                {
+                    new ErrorMessageObj(){Message = "message 1"},
+                    new ErrorMessageObj(){Message = "message 2"},
+                    new ErrorMessageObj(){Message = "message 3"},
+                    new ErrorMessageObj(){Message = "message 4"}
+                    }
+            };
+            return View("Error",model);
+        }
+
+
 
         public ActionResult Register()
         {
@@ -97,11 +154,31 @@ namespace MyEvernote.Controllers
             return View();
         }
 
-        public ActionResult UserActivate(Guid activateId)
+        public ActionResult UserActivate(Guid id)
+        {
+            EvernoteUserManager manager = new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> result = manager.ActivateUser(id);
+
+            if (result.Errors.Count>0)
+            {
+                TempData["errors"] = result.Errors;
+                return RedirectToAction("UserActivateCancel");
+            }
+            return RedirectToAction("UserActivateOk");
+        }
+        public ActionResult UserActivateOk()
         {
             return View();
         }
-
+        public ActionResult UserActivateCancel()
+        {
+            List<ErrorMessageObj> errors=null;
+            if (TempData["errors"]!=null)
+            {
+                errors = TempData["errors"] as List<ErrorMessageObj>; 
+            }
+            return View(errors);
+        }
 
         public ActionResult Logout()
         {
