@@ -14,6 +14,7 @@ namespace MyEvernote.ViewModels
             IsRedirecting = true;
             RedirectingUrl = "/Home/Index";
             RedirectingTimeOut = 10000;
+            List=new List<T>();
         }
         public List<T> List { get; set; }
         public string Header { get; set; }

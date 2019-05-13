@@ -1,6 +1,87 @@
-﻿
+﻿@using MyEvernote.Entities
+@model EvernoteUser
 @{
     ViewBag.Title = "Profil Düzenleme";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="~/Content/Validation-Summary.css" rel="stylesheet" />
+<div class="row">
+    <h2 class="text-info text-center">@ViewBag.Title</h2>
+    <hr />
+</div>
+
+<div class="row">
+    @using (Html.BeginForm("EditProfile", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="form-horizontal">
+            <div class="col-md-3">
+                <img src="~/Images/@Model.ProfileImageFileName" alt="@Model.UserName" class="img-circle" width="148" height="148" />
+                @Html.HiddenFor(x=>x.ProfileImageFileName)
+                <br /><br />
+                <input type="file" name="ProfileImge" id="ProfileImge" class="form-control" />
+                <br />
+                <span class="glyphicon glyphicon-info-sign text-info">&nbsp;</span>
+                <span class=" text-info"><i>Lütfen jpg,jpeg veya png formatını kullanın.</i></span>
+            </div>
+
+            <div class="col-md-9">
+                @Html.ValidationSummary(false)
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.Name, new { @class = "control-label  text-info" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                    </div>
+                </div><br />
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.Surname, new { @class = "control-label  text-info" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.Surname, new { @class = "form-control" })
+                    </div>
+                </div><br />
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.UserName, new { @class = "control-label  text-info" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.UserName, new { @class = "form-control" })
+                    </div>
+                </div><br />
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.Email, new { @class = "control-label  text-info" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+                    </div>
+                </div><br />
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.LabelFor(x => x.Password, new { @class = "control-label  text-info" })
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(x => x.Password, new { @class = "form-control" })
+                    </div>
+                </div><br />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Kaydet" class="btn btn-success" />
+                        @Html.ActionLink("İptal", "ShowProfile", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
 

@@ -7,46 +7,25 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>@ViewBag.Title</h2> 
+            <h2 class="text-info text-center">@ViewBag.Title</h2>
             <hr />
         </div>
     </div>
     <div class="row">
-        <div class="col-md-2">
-            <img src="~/Images/@Model.ProfileImageFileName" class="img-circle img-thumbnail" width="128" height="128" alt="@Model.UserName" />
+        <div class="col-md-3">
+            <img src="~/Images/@Model.ProfileImageFileName" class="img-circle" width="148" height="148" alt="@Model.UserName" />
         </div>
-        <div class="col-md-8">
-            
-            <h3>@Model.Name&nbsp;@Model.Surname</h3>
+        <div class="col-md-9">
+
+            <h2 class="text-info">@Model.Name&nbsp;@Model.Surname</h2>
             <br />
-            <h5><b>Username:</b>@Model.UserName</h5>
+            <h4 class="text-info"><b>@Html.DisplayNameFor(x=>x.UserName):&nbsp;</b>@Model.UserName</h4>
             <br />
-            <h5><b>Email:</b>@Model.Email</h5>
+            <h4 class="text-info"><b>@Html.DisplayNameFor(x=>x.Email) :&nbsp;</b>@Model.Email</h4>
             <br />
-            <h6><a href="#">Daha fazla...</a></h6>
-        </div>
-        <div class="col-md-2 text-right">
-            <div class="btn-group">
-                <a href="#" class="btn dropdown-toggle btn-info" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-cog"></span><span class="caret"></span>Ayarlar
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="@Url.Action("EditProfile")"><span class="glyphicon glyphicon-edit">&nbsp;</span>Düzenle</a></li>
-                    <li><a href="@Url.Action("RemoveProfile")" onclick="return confirm('Hesabınızı Silmek istediğinize emin misiniz?');"><span class="glyphicon glyphicon-trash">&nbsp;</span>Sil</a></li>
-                  
-                </ul>
-            </div>
+            <h5><a href="#">Daha fazla...</a></h5>
         </div>
     </div>
 </div>
 
 
-<script>
-    $(function() {
-
-       
-
-
-    });
-
-</script>

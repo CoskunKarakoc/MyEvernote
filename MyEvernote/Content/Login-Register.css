@@ -87,13 +87,13 @@ input:focus{
 .links a{
     margin-left: 4px;
 }
-.validation-summary-errors{
-    border:2px dotted #a94442;
+.validation-summary-errors {
+    border: 2px dotted #a94442;
     background-color: #d76663;
     border-radius: 8px;
 }
 
-.validation-summary-errors ul{
+.validation-summary-errors ul {
     list-style-type: none;
     padding: 10px;
     color: #fff;

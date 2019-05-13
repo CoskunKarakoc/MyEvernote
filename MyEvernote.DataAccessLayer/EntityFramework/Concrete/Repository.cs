@@ -75,16 +75,17 @@ namespace MyEvernote.DataAccessLayer.EntityFramework.Concrete
         
         public int Update(T obj)
         {
-            context.Entry(obj).State = EntityState.Modified;
             if (obj is MyEntityBase)
             {
                 MyEntityBase o = obj as MyEntityBase;
+
                 o.ModifiedOn = DateTime.Now;
                 o.ModifiedUsername = App.Common.GetCurrentUsername();
             }
+
             return Save();
         }
-        
+     
 
     }
 }

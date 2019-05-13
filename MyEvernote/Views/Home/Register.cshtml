@@ -4,6 +4,7 @@
     ViewBag.Title = "Kaydol";
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
 }
+<link href="~/Content/Validation-Summary.css" rel="stylesheet" />
 @using (Html.BeginForm("Register", "Home"))
 {
     @Html.ValidationSummary(false)

@@ -46,6 +46,8 @@ namespace MyEvernote.Controllers
         public ActionResult ShowProfile()
         {
            EvernoteUser user=Session["login"] as EvernoteUser;
+           if (user!=null)
+           {
            EvernoteUserManager manager=new EvernoteUserManager();
            BusinessLayerResult<EvernoteUser> result = manager.GetUserById(user.Id);
 
@@ -53,26 +55,101 @@ namespace MyEvernote.Controllers
            {
                foreach (ErrorMessageObj error in result.Errors)
                {
-                  //TODO: Hata olduğunda yönlenecek kısım
-               }
+                    //TODO: Hata olduğunda yönlenecek kısım
+                    ErrorViewModel model = new ErrorViewModel()
+                    {
+                        Title = "Hata Oluştu",
+                        RedirectingUrl = "/Home/Index",
+                        List = result.Errors
+                    };
+                    return View("Error", model);
+                }
            }
            
             return View(result.Result);
+           }
+
+           return RedirectToAction("Index");
         }
 
         public ActionResult EditProfile()
         {
-            return View();
+            EvernoteUser user=Session["login"] as EvernoteUser;
+            if (user!=null)
+            {
+            EvernoteUserManager manager=new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> result=manager.GetUserById(user.Id);
+            if (result.Errors.Count>0)
+            {
+                foreach (ErrorMessageObj error in result.Errors)
+                {
+                    ErrorViewModel errorViewModel = new ErrorViewModel()
+                    {
+                        Title = "Hata Oluştu",
+                        RedirectingUrl = "/Home/Index",
+                        List = result.Errors
+                    };
+                    return View("Error", errorViewModel);
+
+                }
+            }
+
+            return View(result.Result);
+
+            }
+         
+            return View("Index");
         }
         [HttpPost]
-        public ActionResult EditProfile(EvernoteUser user)
+        public ActionResult EditProfile(EvernoteUser user,HttpPostedFileBase ProfileImge)
         {
-            return View();
+            ModelState.Remove("ModifiedUsername");
+            if (ModelState.IsValid)
+            {
+                if (ProfileImge != null && (ProfileImge.ContentType == "image/jpeg" || ProfileImge.ContentType == "image/jpg" || ProfileImge.ContentType == "image/png"))
+                {
+                    string filname = $"user_{user.Id}.{ProfileImge.ContentType.Split('/')[1]}";
+                    ProfileImge.SaveAs(Server.MapPath($"~/Images/{filname}"));
+                    user.ProfileImageFileName = filname;
+                }
+                EvernoteUserManager manager = new EvernoteUserManager();
+                BusinessLayerResult<EvernoteUser> result = manager.UpdateProfile(user);
+                if (result.Errors.Count > 0)
+                {
+                    ErrorViewModel errorViewModel = new ErrorViewModel()
+                    {
+                        List = result.Errors,
+                        Title = "Profil Güncellenemedi",
+                        RedirectingUrl = "/Home/EditProfile"
+                    };
+                    return View("Error", errorViewModel);
+                }
+
+                Session["login"] = result.Result;
+                return RedirectToAction("ShowProfile");
+            }
+
+            return View(user);  
         }
 
         public ActionResult RemoveProfile()
         {
-            return View();
+            EvernoteUser user=Session["login"] as EvernoteUser;
+            EvernoteUserManager manager=new EvernoteUserManager();
+            BusinessLayerResult<EvernoteUser> layerResult = manager.RemoveUserById(user.Id);
+            if (layerResult.Errors.Count>0)
+            {
+                ErrorViewModel errorViewModel=new ErrorViewModel()
+                {
+                    List = layerResult.Errors,
+                    Title = "Profil Silinemedi",
+                    RedirectingUrl = "/Home/ShowProfile"
+                };
+                return View("Error", errorViewModel);
+
+            }
+            Session.Clear();
+            return RedirectToAction("Index");
         }
         public ActionResult Login()
         {
@@ -135,24 +212,27 @@ namespace MyEvernote.Controllers
         public ActionResult Register(RegisterViewModel model)
         {
             EvernoteUserManager manager = new EvernoteUserManager();
-            BusinessLayerResult<EvernoteUser> result = manager.RegisterUser(model);
             if (ModelState.IsValid)
             {
+            BusinessLayerResult<EvernoteUser> result = manager.RegisterUser(model);
                 if (result.Errors.Count > 0)
                 {
                     result.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
                     return View(model);
                 }
-                return RedirectToAction("RegisterOk", "Home");
+
+                OkViewModel okViewModel = new OkViewModel()
+                {
+                    Title = "Kayıt Başarılı",
+                    RedirectingUrl = "/Home/Login"
+                };
+                okViewModel.List.Add("  Lütfen e-posta adresinize gönderdiğimiz aktivasyon linki'ne tıklayarak hesabınızı aktive ediniz.Hesabınızı aktive etmeden not ekleyemez ve beğenme yapamazsınız.");
+                return View("Ok",okViewModel);
             }
 
             return View(model);
         }
 
-        public ActionResult RegisterOk()
-        {
-            return View();
-        }
 
         public ActionResult UserActivate(Guid id)
         {
@@ -161,24 +241,25 @@ namespace MyEvernote.Controllers
 
             if (result.Errors.Count>0)
             {
-                TempData["errors"] = result.Errors;
-                return RedirectToAction("UserActivateCancel");
+                ErrorViewModel model=new ErrorViewModel()
+                {
+                    Title = "Geçersiz İşlem",
+                    RedirectingUrl = "/Home/Index",
+                    List = result.Errors
+                };
+                return View("Error",model);
             }
-            return RedirectToAction("UserActivateOk");
-        }
-        public ActionResult UserActivateOk()
-        {
-            return View();
-        }
-        public ActionResult UserActivateCancel()
-        {
-            List<ErrorMessageObj> errors=null;
-            if (TempData["errors"]!=null)
+
+            OkViewModel okViewModel=new OkViewModel()
             {
-                errors = TempData["errors"] as List<ErrorMessageObj>; 
-            }
-            return View(errors);
+                Title ="Hesap Aktifleştirildi",
+                RedirectingUrl = "/Home/Login",
+             
+            };
+            okViewModel.List.Add("Hesabınızla artık not paylaşabilir ve not beğenisi yapabilirsiniz.");
+            return View("Ok",okViewModel);
         }
+    
 
         public ActionResult Logout()
         {
