@@ -1,19 +1,16 @@
-﻿using System;
+﻿using MyEvernote.Common;
+using MyEvernote.Core.DataAccess;
+using MyEvernote.Core.Entities;
+using MyEvernote.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using MyEvernote.Common;
-using MyEvernote.DataAccessLayer;
-using MyEvernote.DataAccessLayer.EntityFramework.Abstract;
-using MyEvernote.Entities;
-using MyEvernote.Entities.Abstract;
 
 namespace MyEvernote.DataAccessLayer.EntityFramework.Concrete
 {
-    public class Repository<T>: RepositoryBase,IRepository<T> where T: class,IEntity,new ()
+    public class Repository<T>: RepositoryBase,IDataAccess<T> where T: class,IEntity,new ()
     {
         private DbSet<T> _dbSet;
         public Repository()

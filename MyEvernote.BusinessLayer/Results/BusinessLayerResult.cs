@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using MyEvernote.Entities.Messages;
 
-namespace MyEvernote.BusinessLayer
+namespace MyEvernote.BusinessLayer.Results
 {
     public class BusinessLayerResult<T> where T:class,new ()
     {

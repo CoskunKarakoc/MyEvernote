@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using MyEvernote.BusinessLayer;
+using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 using MyEvernote.Entities.DataTransferObjects;
 using MyEvernote.Entities.Messages;
@@ -16,7 +17,9 @@ namespace MyEvernote.Controllers
 {
     public class HomeController : Controller
     {
-
+        NoteManager _noteManager =new NoteManager();
+        EvernoteUserManager _evernoteUserManager=new EvernoteUserManager();
+        CategoryManager _categoryManager=new CategoryManager();
         // GET: Home
         public ActionResult Index()
         {
@@ -24,17 +27,17 @@ namespace MyEvernote.Controllers
             {
                 return View(TempData["category"] as List<Note>);
             }
-            NoteManager noteManager = new NoteManager();
+           
             
             //noteManager.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList()
-            return View(noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn));
+            return View(_noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn));
         }
 
 
         public ActionResult MostLiked()
         {
-            NoteManager manager = new NoteManager();
-            return View("Index", manager.GetAllNotesQueryable().OrderByDescending(x => x.LikeCount).ToList());
+          
+            return View("Index", _noteManager.GetAllNotesQueryable().OrderByDescending(x => x.LikeCount).ToList());
         }
 
         public ActionResult About()
@@ -48,14 +51,13 @@ namespace MyEvernote.Controllers
            EvernoteUser user=Session["login"] as EvernoteUser;
            if (user!=null)
            {
-           EvernoteUserManager manager=new EvernoteUserManager();
-           BusinessLayerResult<EvernoteUser> result = manager.GetUserById(user.Id);
+       
+           BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.GetUserById(user.Id);
 
            if (result.Errors.Count>0)
            {
                foreach (ErrorMessageObj error in result.Errors)
                {
-                    //TODO: Hata olduğunda yönlenecek kısım
                     ErrorViewModel model = new ErrorViewModel()
                     {
                         Title = "Hata Oluştu",
@@ -77,8 +79,8 @@ namespace MyEvernote.Controllers
             EvernoteUser user=Session["login"] as EvernoteUser;
             if (user!=null)
             {
-            EvernoteUserManager manager=new EvernoteUserManager();
-            BusinessLayerResult<EvernoteUser> result=manager.GetUserById(user.Id);
+           
+            BusinessLayerResult<EvernoteUser> result=_evernoteUserManager.GetUserById(user.Id);
             if (result.Errors.Count>0)
             {
                 foreach (ErrorMessageObj error in result.Errors)
@@ -112,8 +114,8 @@ namespace MyEvernote.Controllers
                     ProfileImge.SaveAs(Server.MapPath($"~/Images/{filname}"));
                     user.ProfileImageFileName = filname;
                 }
-                EvernoteUserManager manager = new EvernoteUserManager();
-                BusinessLayerResult<EvernoteUser> result = manager.UpdateProfile(user);
+            
+                BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.UpdateProfile(user);
                 if (result.Errors.Count > 0)
                 {
                     ErrorViewModel errorViewModel = new ErrorViewModel()
@@ -135,8 +137,8 @@ namespace MyEvernote.Controllers
         public ActionResult RemoveProfile()
         {
             EvernoteUser user=Session["login"] as EvernoteUser;
-            EvernoteUserManager manager=new EvernoteUserManager();
-            BusinessLayerResult<EvernoteUser> layerResult = manager.RemoveUserById(user.Id);
+         
+            BusinessLayerResult<EvernoteUser> layerResult = _evernoteUserManager.RemoveUserById(user.Id);
             if (layerResult.Errors.Count>0)
             {
                 ErrorViewModel errorViewModel=new ErrorViewModel()
@@ -158,10 +160,10 @@ namespace MyEvernote.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
-            EvernoteUserManager manager = new EvernoteUserManager();
+          
             if (ModelState.IsValid)
             {
-                BusinessLayerResult<EvernoteUser> user = manager.LoginUser(model);
+                BusinessLayerResult<EvernoteUser> user = _evernoteUserManager.LoginUser(model);
                 if (user.Errors.Count > 0)
                 {
                     //user.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
@@ -211,10 +213,10 @@ namespace MyEvernote.Controllers
         [HttpPost]
         public ActionResult Register(RegisterViewModel model)
         {
-            EvernoteUserManager manager = new EvernoteUserManager();
+          
             if (ModelState.IsValid)
             {
-            BusinessLayerResult<EvernoteUser> result = manager.RegisterUser(model);
+            BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.RegisterUser(model);
                 if (result.Errors.Count > 0)
                 {
                     result.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
@@ -236,8 +238,8 @@ namespace MyEvernote.Controllers
 
         public ActionResult UserActivate(Guid id)
         {
-            EvernoteUserManager manager = new EvernoteUserManager();
-            BusinessLayerResult<EvernoteUser> result = manager.ActivateUser(id);
+         
+            BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.ActivateUser(id);
 
             if (result.Errors.Count>0)
             {
@@ -274,21 +276,21 @@ namespace MyEvernote.Controllers
 
 
 
-        //public ActionResult Select(int? id)
-        //{   /*Seçilen kategoriye göre listelemenin Tempdata kullanmadan yapılması*/
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    CategoryManager manager = new CategoryManager();
-        //    Category category = manager.GetCategoryById(id.Value);
-        //    if (category == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-        //    }
+        public ActionResult Select(int? id)
+        {   /*Seçilen kategoriye göre listelemenin Tempdata kullanmadan yapılması*/
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+         
+            Category category = _categoryManager.Find(x=>x.Id==id.Value);
+            if (category == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
 
 
-        //    return View("Index", category.Notes.OrderByDescending(x=>x.ModifiedOn));
-        //}
+            return View("Index", category.Notes.OrderByDescending(x => x.ModifiedOn));
+        }
     }
 }

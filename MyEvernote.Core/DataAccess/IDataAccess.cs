@@ -1,14 +1,12 @@
-﻿using System;
+﻿using MyEvernote.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using MyEvernote.Entities.Abstract;
 
-namespace MyEvernote.DataAccessLayer.EntityFramework.Abstract
+namespace MyEvernote.Core.DataAccess
 {
-    public interface IRepository<T> where T:class,IEntity,new ()
+    public interface IDataAccess<T> where T:class,IEntity,new ()
     {
         T Find(Expression<Func<T, bool>> where);
         List<T> List();

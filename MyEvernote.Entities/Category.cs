@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using MyEvernote.Entities.Abstract;
+using MyEvernote.Core.Entities;
 
 namespace MyEvernote.Entities
 {

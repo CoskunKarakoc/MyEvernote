@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyEvernote.Entities.Abstract
+namespace MyEvernote.Core.Entities
 {
     public interface IEntity
     {

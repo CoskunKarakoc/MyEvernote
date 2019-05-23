@@ -4,15 +4,16 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using MyEvernote.BusinessLayer.Abstarct;
+using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Common.Helpers;
-using MyEvernote.DataAccessLayer.EntityFramework.Concrete;
 using MyEvernote.Entities;
 using MyEvernote.Entities.DataTransferObjects;
 using MyEvernote.Entities.Messages;
 
 namespace MyEvernote.BusinessLayer
 {
-    public class EvernoteUserManager : Repository<EvernoteUser>
+    public class EvernoteUserManager : ManagerBase<EvernoteUser>
     {
 
         public BusinessLayerResult<EvernoteUser> RegisterUser(RegisterViewModel data)
@@ -141,6 +142,7 @@ namespace MyEvernote.BusinessLayer
               layerResult.AddError(ErrorMessageCode.ActivateIdDoesNotExists,"Kullanıcı Bulunamadı.");
           }
           return layerResult;
+          
         }
 
         public BusinessLayerResult<EvernoteUser> UpdateProfile(EvernoteUser data)
