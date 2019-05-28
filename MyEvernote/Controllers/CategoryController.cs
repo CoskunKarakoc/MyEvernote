@@ -49,8 +49,12 @@ namespace MyEvernote.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Category category)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
             if (ModelState.IsValid)
             {
+               
                 var result = _categoryManager.Insert(category);
                 if (result > 0)
                 {
@@ -84,9 +88,15 @@ namespace MyEvernote.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Category category)
         {
+            ModelState.Remove("CreatedOn");
+            ModelState.Remove("ModifiedOn");
+            ModelState.Remove("ModifiedUsername");
             if (ModelState.IsValid)
             {
-                var result = _categoryManager.Update(category);
+                Category cat = _categoryManager.Find(x => x.Id == category.Id);
+                cat.Title = category.Title;
+                cat.Description = category.Description;
+                var result = _categoryManager.Update(cat);
                 if (result > 0)
                 {
                     return RedirectToAction("Index");

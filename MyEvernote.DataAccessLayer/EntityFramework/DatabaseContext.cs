@@ -13,7 +13,23 @@ namespace MyEvernote.DataAccessLayer.EntityFramwork
         public DatabaseContext()
         {
             Database.SetInitializer(new MyInitializer());
+            
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // FluentAPI=>ilişkisel tablodan veri silme işleminin bir diğer yöntemi
+            modelBuilder.Entity<Note>()
+                .HasMany(x => x.Comments)
+                .WithRequired(c => c.Note)
+                .WillCascadeOnDelete(true);
+            modelBuilder.Entity<Note>()
+                .HasMany(x=>x.Likes)
+                .WithRequired(c=>c.Note)
+                .WillCascadeOnDelete(true);
+            
+        }
+
         public DbSet<EvernoteUser> EvernoteUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }

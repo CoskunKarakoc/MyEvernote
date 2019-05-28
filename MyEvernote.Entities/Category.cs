@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,9 +18,12 @@ namespace MyEvernote.Entities
         {
             Notes=new List<Note>();
         }
-        [Required,StringLength(50)]
+        [DisplayName("Başlık"),
+         Required(ErrorMessage = "{0} alanının girilmesi zorunludur."),
+         StringLength(50,ErrorMessage = "{0} alanının max. {1} karakterden oluşturulması gerekiyor.")]
         public string Title { get; set; }
-        [StringLength(200)]
+        [DisplayName("Açıklama"),
+         StringLength(200,ErrorMessage = "{0} alanının max. {1} karakterden oluşturulması gerekiyor.")]
         public string Description { get; set; }
 
         public virtual List<Note> Notes { get; set; }   

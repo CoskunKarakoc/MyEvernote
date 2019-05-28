@@ -11,19 +11,20 @@ namespace MyEvernote.BusinessLayer.Abstarct
     public abstract class ManagerBase<T> : IDataAccess<T> where T : class, IEntity, new()
     { 
        
-        Repository<T> _repository=new Repository<T>();
+       private Repository<T> _repository=new Repository<T>();
 
-        public T Find(Expression<Func<T, bool>> @where)
+        public virtual T Find(Expression<Func<T, bool>> @where)
         {
+          
            return _repository.Find(where);
         }
 
-        public List<T> List()
+        public virtual List<T> List()
         {
             return _repository.List();
         }
 
-        public List<T> List(Expression<Func<T, bool>> @where)
+        public virtual List<T> List(Expression<Func<T, bool>> @where)
         {
             return _repository.List(where);
         }
@@ -33,22 +34,22 @@ namespace MyEvernote.BusinessLayer.Abstarct
             return _repository.Save();
         }
 
-        public int Insert(T obj)
+        public virtual int Insert(T obj)
         {
-            return Insert(obj);
+            return _repository.Insert(obj);
         }
 
-        public int Delete(T obj)
+        public virtual int Delete(T obj)
         {
             return _repository.Delete(obj);
         }
 
-        public int Update(T obj)
+        public virtual int Update(T obj)
         {
             return _repository.Update(obj);
         }
 
-        public IQueryable<T> ListQueryable()
+        public virtual IQueryable<T> ListQueryable()
         {
             return _repository.ListQueryable();
         }

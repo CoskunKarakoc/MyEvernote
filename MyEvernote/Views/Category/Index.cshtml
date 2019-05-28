@@ -1,58 +1,72 @@
-﻿@model IEnumerable<MyEvernote.Entities.Category>
+﻿@using MyEvernote @*Helper Metotlarını Kullanabilmek İçin Ekledik*@
+@model IEnumerable<MyEvernote.Entities.Category>
 
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+    ViewBag.Title = "Kategoriler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h2 class="text-info">Kategoriler</h2>
+        <hr />
+    </div>
+</div>
 
-<h2>Index</h2>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <p>
+            @*  @Bootstrap.LinkButton("Create","primary",null,null,"plus","Create")
+                //Kendi yazdığımız helper metodu sayesinde link ve buttonlarımızı metot haline getirdik
+            *@
+            <a href="@Url.Action("Create", "Category")" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Create</a>
+        </p>
+        <table class="table">
+            <tr>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.CreatedOn)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.ModifiedOn)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.ModifiedUsername)
+                </th>
+                <th></th>
+            </tr>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ModifiedUsername)
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-primary">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td class="text-primary">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-primary">
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
+                    <td class="text-primary">
+                        @Html.DisplayFor(modelItem => item.ModifiedOn)
+                    </td>
+                    <td class="text-primary">
+                        @Html.DisplayFor(modelItem => item.ModifiedUsername)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit","Category",new {id=item.Id})" class="text-warning" title="Edit"><span class="glyphicon glyphicon-edit"></span></a> |
+                        <a href="@Url.Action("Details","Category",new{id=item.Id})" class="text-info" title="Detail"><span class="glyphicon glyphicon-search"></span></a> |
+                        <a href="@Url.Action("Delete","Category",new {id=item.Id})" class="text-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedOn)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ModifiedUsername)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+        </table>
 
-</table>
+    </div>
+</div>
