@@ -12,13 +12,17 @@
 
 
 }
-@helper Button(string id = "",string type="button", string color = "", string additionalClass = "", string icon = "", string text = "")
+@helper Button(string id = "", string type = "button", string color = "", string additionalClass = "", string icon = "", string text = "")
 {
-   
-        <button type="@type" class="btn btn-@color @additionalClass" id="@id" name="@id" ><span class="glyphicon glyphicon-@icon"></span> @text</button>
+
+    <button type="@type" class="btn btn-@color @additionalClass" id="@id" name="@id"><span class="glyphicon glyphicon-@icon"></span> @text</button>
 }
-@helper Button(string type="button", string color = "", string additionalClass = "", string icon = "", string text = "")
+@helper Button(string type = "button", string color = "", string additionalClass = "", string icon = "", string text = "")
 {
-   
+
     <button type="@type" class="btn btn-@color @additionalClass"><span class="glyphicon glyphicon-@icon"></span> @text</button>
+}
+@helper LinkMenu(string url="",string icon="",string text="",string @class="")
+{
+    <a href="@url" class="@(@class)"><span class="glyphicon glyphicon-@icon">&nbsp;</span>@text</a>
 }

@@ -18,7 +18,7 @@ namespace MyEvernote.Entities
         {
             Notes=new List<Note>();
         }
-        [DisplayName("Başlık"),
+        [DisplayName("Kategori"),
          Required(ErrorMessage = "{0} alanının girilmesi zorunludur."),
          StringLength(50,ErrorMessage = "{0} alanının max. {1} karakterden oluşturulması gerekiyor.")]
         public string Title { get; set; }

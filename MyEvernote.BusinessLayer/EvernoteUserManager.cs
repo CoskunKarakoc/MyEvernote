@@ -37,7 +37,7 @@ namespace MyEvernote.BusinessLayer
             }
             else
             {
-                int dbResult = Insert(new EvernoteUser()
+                int dbResult = base.Insert(new EvernoteUser()
                 {
                     UserName = data.Username,
                     Email = data.EMail,
@@ -127,22 +127,22 @@ namespace MyEvernote.BusinessLayer
 
         public BusinessLayerResult<EvernoteUser> RemoveUserById(int id)
         {
-          BusinessLayerResult<EvernoteUser> layerResult=new BusinessLayerResult<EvernoteUser>();
-          EvernoteUser user = Find(x => x.Id == id);
-          if (user!=null)
-          {
-              if (Delete(user)==0)
-              {
-                  layerResult.AddError(ErrorMessageCode.ActivateIdDoesNotExists,"Kullanıcı Silinemedi.");
-                  return layerResult;
-              }
-          }
-          else
-          {
-              layerResult.AddError(ErrorMessageCode.ActivateIdDoesNotExists,"Kullanıcı Bulunamadı.");
-          }
-          return layerResult;
-          
+            BusinessLayerResult<EvernoteUser> layerResult = new BusinessLayerResult<EvernoteUser>();
+            EvernoteUser user = Find(x => x.Id == id);
+            if (user != null)
+            {
+                if (Delete(user) == 0)
+                {
+                    layerResult.AddError(ErrorMessageCode.ActivateIdDoesNotExists, "Kullanıcı Silinemedi.");
+                    return layerResult;
+                }
+            }
+            else
+            {
+                layerResult.AddError(ErrorMessageCode.ActivateIdDoesNotExists, "Kullanıcı Bulunamadı.");
+            }
+            return layerResult;
+
         }
 
         public BusinessLayerResult<EvernoteUser> UpdateProfile(EvernoteUser data)
@@ -172,16 +172,95 @@ namespace MyEvernote.BusinessLayer
             layerResult.Result.Surname = data.Surname;
             layerResult.Result.Password = data.Password;
             layerResult.Result.UserName = data.UserName;
-           
+
 
             if (!string.IsNullOrEmpty(data.ProfileImageFileName))
             {
                 layerResult.Result.ProfileImageFileName = data.ProfileImageFileName;
             }
 
-            if (Update(layerResult.Result) == 0)
+            if (base.Update(layerResult.Result) == 0)
             {
                 layerResult.AddError(ErrorMessageCode.ProfileCouldNotUpdated, "Kullanıcı güncellenemedi.");
+            }
+
+            return layerResult;
+
+        }
+
+        //Method Hiding.. Base'deki metodu gizleyerek bu metodun çalışmasını sağladık(new anahtar kelimesi ile)
+        public new BusinessLayerResult<EvernoteUser> Insert(EvernoteUser data)
+        {
+            BusinessLayerResult<EvernoteUser> layerResult = new BusinessLayerResult<EvernoteUser>();
+            EvernoteUser user = Find(x => x.UserName == data.UserName || x.Email == data.Email);
+            layerResult.Result = data;
+            if (user != null)
+            {
+                if (user.UserName == data.UserName)
+                {
+                    layerResult.AddError(ErrorMessageCode.UsernameAlreadyExists, "Kullanıcı adı kayıtlı");
+                }
+
+                if (user.Email == data.Email)
+                {
+                    layerResult.AddError(ErrorMessageCode.EMailAlreadyExists, "E-Mail hesabı daha önceden kullanılıyor.");
+                }
+            }
+            else
+            {
+                layerResult.Result.ProfileImageFileName = "user.png";
+                layerResult.Result.ActivateGuid = Guid.NewGuid();
+                if (base.Insert(layerResult.Result) == 0)
+                {
+                    layerResult.AddError(ErrorMessageCode.UserCouldNotInserted, "Kullanıcı Eklenemedi");
+                }
+
+            }
+
+            return layerResult;
+
+
+        }
+
+        public new BusinessLayerResult<EvernoteUser> Update(EvernoteUser data)
+        {
+            EvernoteUser db_user = Find(x => x.UserName == data.UserName || x.Email == data.Email);
+            BusinessLayerResult<EvernoteUser> layerResult = new BusinessLayerResult<EvernoteUser>();
+            layerResult.Result = data;
+
+            if (db_user != null && db_user.Id != data.Id)
+            {
+                if (db_user.UserName == data.UserName)
+                {
+                    layerResult.AddError(ErrorMessageCode.UsernameAlreadyExists, "Kullanıcı adı kayıtlı.");
+                }
+
+                if (db_user.Email == data.Email)
+                {
+                    layerResult.AddError(ErrorMessageCode.EMailAlreadyExists, "E-posta adresi kayıtlı.");
+                }
+
+                return layerResult;
+            }
+
+            layerResult.Result = Find(x => x.Id == data.Id);
+            layerResult.Result.Email = data.Email;
+            layerResult.Result.Name = data.Name;
+            layerResult.Result.Surname = data.Surname;
+            layerResult.Result.Password = data.Password;
+            layerResult.Result.UserName = data.UserName;
+            layerResult.Result.isActive = data.isActive;
+            layerResult.Result.isAdmin = data.isAdmin;
+
+
+            if (!string.IsNullOrEmpty(data.ProfileImageFileName))
+            {
+                layerResult.Result.ProfileImageFileName = data.ProfileImageFileName;
+            }
+
+            if (base.Update(layerResult.Result) == 0)
+            {
+                layerResult.AddError(ErrorMessageCode.UserCouldNotUpdated, "Kullanıcı güncellenemedi.");
             }
 
             return layerResult;

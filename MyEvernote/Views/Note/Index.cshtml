@@ -1,0 +1,85 @@
+﻿@model IEnumerable<MyEvernote.Entities.Note>
+
+@{
+    ViewBag.Title = "Notlarım";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-info">Notlarım</h2>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-offset-1 col-md-10">
+        <p>
+            <a href="@Url.Action("Create")" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-plus"></span> Create New</a>
+        </p>
+        <table class="table">
+            <tr>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.Category.Title)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.Text)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.isDraft)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.LikeCount)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.CreatedOn)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.ModifiedOn)
+                </th>
+                <th class="text-info">
+                    @Html.DisplayNameFor(model => model.ModifiedUsername)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model) {
+                <tr>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.Category.Title)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.isDraft)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.LikeCount)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.ModifiedOn)
+                    </td>
+                    <td class="text-info">
+                        @Html.DisplayFor(modelItem => item.ModifiedUsername)
+                    </td>
+                    <td style="width: 100px;">
+                        <a href="@Url.Action("Edit","Note",new {id=item.Id})" title="Edit" class="text-warning"><span class="glyphicon glyphicon-edit"></span></a> |
+                        <a href="@Url.Action("Details","Note",new {id=item.Id})" title="Details" class="text-info"><span class="glyphicon glyphicon-search"></span></a> |
+                        <a href="@Url.Action("Delete","Note",new {id=item.Id})" title="Delete" class="text-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+</div>

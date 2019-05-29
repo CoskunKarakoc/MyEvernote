@@ -54,15 +54,19 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench">&nbsp;</span>Yönetim <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="@Url.Action("AddNew","Note")"><span class="glyphicon glyphicon-plus">&nbsp;</span>Not Ekle</a></li>
+                                <li><a href="@Url.Action("Create","Note")"><span class="glyphicon glyphicon-plus">&nbsp;</span>Not Ekle</a></li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="@Url.Action("MyNotes","Note")"><span class="glyphicon glyphicon-th-list">&nbsp;</span>Notlarım</a></li>
+                                <li><a href="@Url.Action("Index","Note")"><span class="glyphicon glyphicon-th-list">&nbsp;</span>Notlarım</a></li>
                                 <li><a href="@Url.Action("MyLikedNotes","Note")"><span class="glyphicon glyphicon-heart">&nbsp;</span>Beğendiklerim</a></li>
                                 @if (user.isAdmin)
                                 {
                                     <li role="separator" class="divider"></li>
+                                    @*<li>@Bootstrap.LinkMenu("/Category/Create","plus", "Kategori Ekle", "")</li> //Helper Metodumuzlada link verebiliriz*@
                                     <li><a href="@Url.Action("Create","Category")"><span class="glyphicon glyphicon-plus">&nbsp;</span>Kategori Ekle</a></li>
                                     <li><a href="@Url.Action("Index","Category")"><span class="glyphicon glyphicon-th-list">&nbsp;</span>Kategoriler</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="@Url.Action("Create","EvernoteUser")"><span class="glyphicon glyphicon-plus">&nbsp;</span>Kullanıcı Ekle</a></li>
+                                    <li><a href="@Url.Action("Index","EvernoteUser")"><span class="glyphicon glyphicon-user">&nbsp;</span>Kullanıcılar</a></li>
                                 }
                             </ul>
                         </li>

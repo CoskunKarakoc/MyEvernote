@@ -1,0 +1,95 @@
+﻿@model MyEvernote.Entities.Note
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-info">Delete</h2>
+        <h3 class="text-info">Are you sure you want to delete this?</h3>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-offset-1 col-md-10">
+        <h4 class="text-info">Note</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Category.Title)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Category.Title)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Text)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Text)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.isDraft)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.isDraft)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.LikeCount)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.LikeCount)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.CreatedOn)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.CreatedOn)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.ModifiedOn)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.ModifiedOn)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.ModifiedUsername)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.ModifiedUsername)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color col-md-offset-2 col-md-6">
+            <button type="submit" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span> Delete</button> |
+            <a href="@Url.Action("Index","Note")" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Back to List</a>
+        </div>
+        }
+    </div>
+</div>

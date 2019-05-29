@@ -1,0 +1,89 @@
+﻿@model MyEvernote.Entities.Note
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-info">Details</h2>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <h4 class="text-info">Note</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Category.Title)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Category.Title)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.Text)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.Text)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.isDraft)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.isDraft)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.LikeCount)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.LikeCount)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.CreatedOn)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.CreatedOn)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.ModifiedOn)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.ModifiedOn)
+            </dd>
+
+            <dt class="text-info">
+                @Html.DisplayNameFor(model => model.ModifiedUsername)
+            </dt>
+
+            <dd class="text-info">
+                @Html.DisplayFor(model => model.ModifiedUsername)
+            </dd>
+
+        </dl>
+    </div>
+    <div class="col-md-offset-2 col-md-6">
+        <a href="@Url.Action("Edit","Note",new { id = Model.Id })" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-edit"></span> Edit</a> |
+        <a href="@Url.Action("Index","Note")" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-hand-left"></span> Back to List</a>
+    </div>
+</div>
+

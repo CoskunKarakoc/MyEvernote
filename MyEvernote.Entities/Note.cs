@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,13 +18,20 @@ namespace MyEvernote.Entities
             Comments=new List<Comment>();
             Likes=new List<Liked>();
         }
-        [Required,StringLength(60)]
+        [Required,
+         StringLength(60),
+        DisplayName("Not Başlığı")]
         public string Title { get; set; }
 
-        [Required,StringLength(2000)]
+        [Required,
+         StringLength(2000),
+        DisplayName("Not Metni")]
         public string Text { get; set; }
+        [DisplayName("Taslak")]
         public bool isDraft { get; set; }
+        [DisplayName("Beğenilme")]
         public int LikeCount { get; set; }
+        [DisplayName("Kategori")]
         public int CategoryId { get; set; }
 
         public virtual EvernoteUser Owner { get; set; }
