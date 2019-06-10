@@ -57,7 +57,7 @@ namespace MyEvernote.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(_categoryManager.List(), "Id", "Title");
+            ViewBag.CategoryId = new SelectList(CacheHelper.GetCategoryFromCache(), "Id", "Title");
             return View();
         }
 
@@ -76,7 +76,7 @@ namespace MyEvernote.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(_categoryManager.List(), "Id", "Title", note.CategoryId);
+            ViewBag.CategoryId = new SelectList(CacheHelper.GetCategoryFromCache(), "Id", "Title", note.CategoryId);
             return View(note);
         }
 
@@ -115,7 +115,7 @@ namespace MyEvernote.Controllers
                 _noteManager.Update(note_db);
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(_categoryManager.List(), "Id", "Title", note.CategoryId);
+            ViewBag.CategoryId = new SelectList(CacheHelper.GetCategoryFromCache(), "Id", "Title", note.CategoryId);
             return View(note);
         }
 

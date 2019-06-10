@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MyEvernote.BusinessLayer;
 using MyEvernote.Entities;
+using MyEvernote.Models;
 
 namespace MyEvernote.Controllers
 {
@@ -56,6 +57,8 @@ namespace MyEvernote.Controllers
             {
                
                 var result = _categoryManager.Insert(category);
+                CacheHelper.RemoveCategoriesFromCache();/*Category tablosu değiştiği anda Cache'i 
+                                                        temizliyoruz ve Cache'nin yeniden dolmasını sağlıyoruz*/
                 if (result > 0)
                 {
                     return RedirectToAction("Index");
@@ -97,6 +100,7 @@ namespace MyEvernote.Controllers
                 cat.Title = category.Title;
                 cat.Description = category.Description;
                 var result = _categoryManager.Update(cat);
+                CacheHelper.RemoveCategoriesFromCache();
                 if (result > 0)
                 {
                     return RedirectToAction("Index");
@@ -129,6 +133,7 @@ namespace MyEvernote.Controllers
         {
             Category category = _categoryManager.Find(x => x.Id == id);
             _categoryManager.Delete(category);
+            CacheHelper.RemoveCategoriesFromCache();
             return RedirectToAction("Index");
         }
     }

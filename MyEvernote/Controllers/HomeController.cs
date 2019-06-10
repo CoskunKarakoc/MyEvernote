@@ -10,6 +10,7 @@ using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 using MyEvernote.Entities.DataTransferObjects;
 using MyEvernote.Entities.Messages;
+using MyEvernote.Models;
 using MyEvernote.ViewModels;
 
 
@@ -17,9 +18,9 @@ namespace MyEvernote.Controllers
 {
     public class HomeController : Controller
     {
-        NoteManager _noteManager =new NoteManager();
-        EvernoteUserManager _evernoteUserManager=new EvernoteUserManager();
-        CategoryManager _categoryManager=new CategoryManager();
+        NoteManager _noteManager = new NoteManager();
+        EvernoteUserManager _evernoteUserManager = new EvernoteUserManager();
+        CategoryManager _categoryManager = new CategoryManager();
         // GET: Home
         public ActionResult Index()
         {
@@ -27,8 +28,8 @@ namespace MyEvernote.Controllers
             {
                 return View(TempData["category"] as List<Note>);
             }
-           
-            
+
+
             //noteManager.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList()
             return View(_noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn));
         }
@@ -36,7 +37,7 @@ namespace MyEvernote.Controllers
 
         public ActionResult MostLiked()
         {
-          
+
             return View("Index", _noteManager.GetAllNotesQueryable().OrderByDescending(x => x.LikeCount).ToList());
         }
 
@@ -48,62 +49,61 @@ namespace MyEvernote.Controllers
 
         public ActionResult ShowProfile()
         {
-           EvernoteUser user=Session["login"] as EvernoteUser;
-           if (user!=null)
-           {
-       
-           BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.GetUserById(user.Id);
+            if (CurrentSession.User != null)
+            {
 
-           if (result.Errors.Count>0)
-           {
-               foreach (ErrorMessageObj error in result.Errors)
-               {
-                    ErrorViewModel model = new ErrorViewModel()
+                BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.GetUserById(CurrentSession.User.Id);
+
+                if (result.Errors.Count > 0)
+                {
+                    foreach (ErrorMessageObj error in result.Errors)
                     {
-                        Title = "Hata Oluştu",
-                        RedirectingUrl = "/Home/Index",
-                        List = result.Errors
-                    };
-                    return View("Error", model);
+                        ErrorViewModel model = new ErrorViewModel()
+                        {
+                            Title = "Hata Oluştu",
+                            RedirectingUrl = "/Home/Index",
+                            List = result.Errors
+                        };
+                        return View("Error", model);
+                    }
                 }
-           }
-           
-            return View(result.Result);
-           }
 
-           return RedirectToAction("Index");
+                return View(result.Result);
+            }
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult EditProfile()
         {
-            EvernoteUser user=Session["login"] as EvernoteUser;
-            if (user!=null)
+          
+            if (CurrentSession.User != null)
             {
-           
-            BusinessLayerResult<EvernoteUser> result=_evernoteUserManager.GetUserById(user.Id);
-            if (result.Errors.Count>0)
-            {
-                foreach (ErrorMessageObj error in result.Errors)
+
+                BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.GetUserById(CurrentSession.User.Id);
+                if (result.Errors.Count > 0)
                 {
-                    ErrorViewModel errorViewModel = new ErrorViewModel()
+                    foreach (ErrorMessageObj error in result.Errors)
                     {
-                        Title = "Hata Oluştu",
-                        RedirectingUrl = "/Home/Index",
-                        List = result.Errors
-                    };
-                    return View("Error", errorViewModel);
+                        ErrorViewModel errorViewModel = new ErrorViewModel()
+                        {
+                            Title = "Hata Oluştu",
+                            RedirectingUrl = "/Home/Index",
+                            List = result.Errors
+                        };
+                        return View("Error", errorViewModel);
 
+                    }
                 }
+
+                return View(result.Result);
+
             }
 
-            return View(result.Result);
-
-            }
-         
             return View("Index");
         }
         [HttpPost]
-        public ActionResult EditProfile(EvernoteUser user,HttpPostedFileBase ProfileImge)
+        public ActionResult EditProfile(EvernoteUser user, HttpPostedFileBase ProfileImge)
         {
             ModelState.Remove("ModifiedUsername");
             if (ModelState.IsValid)
@@ -114,7 +114,7 @@ namespace MyEvernote.Controllers
                     ProfileImge.SaveAs(Server.MapPath($"~/Images/{filname}"));
                     user.ProfileImageFileName = filname;
                 }
-            
+
                 BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.UpdateProfile(user);
                 if (result.Errors.Count > 0)
                 {
@@ -127,21 +127,21 @@ namespace MyEvernote.Controllers
                     return View("Error", errorViewModel);
                 }
 
-                Session["login"] = result.Result;
+               CurrentSession.Set<EvernoteUser>("login", result.Result);
                 return RedirectToAction("ShowProfile");
             }
 
-            return View(user);  
+            return View(user);
         }
 
         public ActionResult RemoveProfile()
         {
-            EvernoteUser user=Session["login"] as EvernoteUser;
-         
-            BusinessLayerResult<EvernoteUser> layerResult = _evernoteUserManager.RemoveUserById(user.Id);
-            if (layerResult.Errors.Count>0)
+          
+
+            BusinessLayerResult<EvernoteUser> layerResult = _evernoteUserManager.RemoveUserById(CurrentSession.User.Id);
+            if (layerResult.Errors.Count > 0)
             {
-                ErrorViewModel errorViewModel=new ErrorViewModel()
+                ErrorViewModel errorViewModel = new ErrorViewModel()
                 {
                     List = layerResult.Errors,
                     Title = "Profil Silinemedi",
@@ -160,7 +160,7 @@ namespace MyEvernote.Controllers
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
-          
+
             if (ModelState.IsValid)
             {
                 BusinessLayerResult<EvernoteUser> user = _evernoteUserManager.LoginUser(model);
@@ -169,12 +169,12 @@ namespace MyEvernote.Controllers
                     //user.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
                     foreach (var err in user.Errors)
                     {
-                        ModelState.AddModelError(err.Code.ToString(),err.Message);
+                        ModelState.AddModelError(err.Code.ToString(), err.Message);
                     }
                     return View(model);
                 }
 
-                Session["login"] = user.Result;
+              CurrentSession.Set<EvernoteUser>("login",user.Result);//Session'a bilgi saklama
                 return RedirectToAction("Index", "Home");
             }
 
@@ -184,9 +184,9 @@ namespace MyEvernote.Controllers
 
         public ActionResult Test()
         {
-            ErrorViewModel model=new ErrorViewModel()
+            ErrorViewModel model = new ErrorViewModel()
             {
-                
+
                 Title = "uyarı",
                 Header = "İşlem uyarılı",
                 IsRedirecting = true,
@@ -200,7 +200,7 @@ namespace MyEvernote.Controllers
                     new ErrorMessageObj(){Message = "message 4"}
                     }
             };
-            return View("Error",model);
+            return View("Error", model);
         }
 
 
@@ -213,10 +213,10 @@ namespace MyEvernote.Controllers
         [HttpPost]
         public ActionResult Register(RegisterViewModel model)
         {
-          
+
             if (ModelState.IsValid)
             {
-            BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.RegisterUser(model);
+                BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.RegisterUser(model);
                 if (result.Errors.Count > 0)
                 {
                     result.Errors.ForEach(x => ModelState.AddModelError("", x.Message));
@@ -229,7 +229,7 @@ namespace MyEvernote.Controllers
                     RedirectingUrl = "/Home/Login"
                 };
                 okViewModel.List.Add("  Lütfen e-posta adresinize gönderdiğimiz aktivasyon linki'ne tıklayarak hesabınızı aktive ediniz.Hesabınızı aktive etmeden not ekleyemez ve beğenme yapamazsınız.");
-                return View("Ok",okViewModel);
+                return View("Ok", okViewModel);
             }
 
             return View(model);
@@ -238,30 +238,30 @@ namespace MyEvernote.Controllers
 
         public ActionResult UserActivate(Guid id)
         {
-         
+
             BusinessLayerResult<EvernoteUser> result = _evernoteUserManager.ActivateUser(id);
 
-            if (result.Errors.Count>0)
+            if (result.Errors.Count > 0)
             {
-                ErrorViewModel model=new ErrorViewModel()
+                ErrorViewModel model = new ErrorViewModel()
                 {
                     Title = "Geçersiz İşlem",
                     RedirectingUrl = "/Home/Index",
                     List = result.Errors
                 };
-                return View("Error",model);
+                return View("Error", model);
             }
 
-            OkViewModel okViewModel=new OkViewModel()
+            OkViewModel okViewModel = new OkViewModel()
             {
-                Title ="Hesap Aktifleştirildi",
+                Title = "Hesap Aktifleştirildi",
                 RedirectingUrl = "/Home/Login",
-             
+
             };
             okViewModel.List.Add("Hesabınızla artık not paylaşabilir ve not beğenisi yapabilirsiniz.");
-            return View("Ok",okViewModel);
+            return View("Ok", okViewModel);
         }
-    
+
 
         public ActionResult Logout()
         {
@@ -282,8 +282,8 @@ namespace MyEvernote.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-         
-            Category category = _categoryManager.Find(x=>x.Id==id.Value);
+
+            Category category = _categoryManager.Find(x => x.Id == id.Value);
             if (category == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
