@@ -45,7 +45,8 @@
                 <th></th>
             </tr>
 
-            @foreach (var item in Model) {
+            @foreach (var item in Model)
+            {
                 <tr>
                     <td class="text-info">
                         @Html.DisplayFor(modelItem => item.Category.Title)
@@ -71,10 +72,11 @@
                     <td class="text-info">
                         @Html.DisplayFor(modelItem => item.ModifiedUsername)
                     </td>
-                    <td style="width: 100px;">
-                        <a href="@Url.Action("Edit","Note",new {id=item.Id})" title="Edit" class="text-warning"><span class="glyphicon glyphicon-edit"></span></a> |
-                        <a href="@Url.Action("Details","Note",new {id=item.Id})" title="Details" class="text-info"><span class="glyphicon glyphicon-search"></span></a> |
-                        <a href="@Url.Action("Delete","Note",new {id=item.Id})" title="Delete" class="text-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    <td style="width: 150px;">
+                        <a class="text-info" data-toggle="modal" data-target="#model_comment" title="Comment" data-note-id="@item.Id"><span class="glyphicon glyphicon-comment"></span></a> |
+                        <a href="@Url.Action("Edit", "Note", new {id = item.Id})" title="Edit" class="text-warning "><span class="glyphicon glyphicon-edit"></span></a> |
+                        <a href="@Url.Action("Details", "Note", new {id = item.Id})" title="Details" class="text-info"><span class="glyphicon glyphicon-search"></span></a> |
+                        <a href="@Url.Action("Delete", "Note", new {id = item.Id})" title="Delete" class="text-danger"><span class="glyphicon glyphicon-trash"></span></a>
                     </td>
                 </tr>
             }
@@ -83,3 +85,5 @@
 
     </div>
 </div>
+@Bootstrap.ModalPopup(id: "model_comment", title: "Yorumlar")
+<script src="~/Scripts/comment.js"></script>
