@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Upps!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        @{
+            Exception ex = null;
+            if (TempData["LastError"] != null)
+            {
+                ex = TempData["LastError"] as Exception;
+            }
+        }
+        <h1 class="text-danger"><span class="glyphicon glyphicon-remove"></span> Hata Oluştu</h1>
+        <p class="text-danger">
+            Hata oluştu, lütfen site yöneticisi ile iletişime geçiniz.
+            <br /><br /><br />
+            @if (ex != null)
+            {
+                <strong class="text-danger">Hata Detay : </strong>@ex.Message
+                <br /><br /><br />
+            }
+        </p>
+        <p class="col-md-offset-2">
+            @Bootstrap.LinkButton("/Home/Index", "danger", "", "", "home", "Ana Sayfaya Git!")
+
+        </p>
+
+        <p class="col-md-offset-2">
+            @Bootstrap.LinkButton("mailto:coskunkarakocc@gmail.com", "primary", "", "", "envelope", "E-Posta Gönder")
+        </p>
+
+
+
+
+
+    </div>
+</div>

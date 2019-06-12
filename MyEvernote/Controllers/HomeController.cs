@@ -10,20 +10,25 @@ using MyEvernote.BusinessLayer.Results;
 using MyEvernote.Entities;
 using MyEvernote.Entities.DataTransferObjects;
 using MyEvernote.Entities.Messages;
+using MyEvernote.Filters;
 using MyEvernote.Models;
 using MyEvernote.ViewModels;
 
 
 namespace MyEvernote.Controllers
 {
+    [Excp]
     public class HomeController : Controller
     {
         NoteManager _noteManager = new NoteManager();
         EvernoteUserManager _evernoteUserManager = new EvernoteUserManager();
         CategoryManager _categoryManager = new CategoryManager();
+
+
         // GET: Home
         public ActionResult Index()
         {
+
             if (TempData["category"] != null)
             {
                 return View(TempData["category"] as List<Note>);
@@ -31,14 +36,14 @@ namespace MyEvernote.Controllers
 
 
             //noteManager.GetAllNotesQueryable().OrderByDescending(x => x.ModifiedOn).ToList()
-            return View(_noteManager.GetAllNotes().OrderByDescending(x => x.ModifiedOn));
+            return View(_noteManager.GetAllNotes().Where(x => x.isDraft == false).OrderByDescending(x => x.ModifiedOn));
         }
 
 
         public ActionResult MostLiked()
         {
 
-            return View("Index", _noteManager.GetAllNotesQueryable().OrderByDescending(x => x.LikeCount).ToList());
+            return View("Index", _noteManager.GetAllNotesQueryable().Where(x => x.isDraft == false).OrderByDescending(x => x.LikeCount).ToList());
         }
 
         public ActionResult About()
@@ -46,7 +51,7 @@ namespace MyEvernote.Controllers
             return View();
         }
 
-
+        [Auth]
         public ActionResult ShowProfile()
         {
             if (CurrentSession.User != null)
@@ -73,10 +78,10 @@ namespace MyEvernote.Controllers
 
             return RedirectToAction("Index");
         }
-
+        [Auth]
         public ActionResult EditProfile()
         {
-          
+
             if (CurrentSession.User != null)
             {
 
@@ -102,6 +107,7 @@ namespace MyEvernote.Controllers
 
             return View("Index");
         }
+        [Auth]
         [HttpPost]
         public ActionResult EditProfile(EvernoteUser user, HttpPostedFileBase ProfileImge)
         {
@@ -127,16 +133,16 @@ namespace MyEvernote.Controllers
                     return View("Error", errorViewModel);
                 }
 
-               CurrentSession.Set<EvernoteUser>("login", result.Result);
+                CurrentSession.Set<EvernoteUser>("login", result.Result);
                 return RedirectToAction("ShowProfile");
             }
 
             return View(user);
         }
-
+        [Auth]
         public ActionResult RemoveProfile()
         {
-          
+
 
             BusinessLayerResult<EvernoteUser> layerResult = _evernoteUserManager.RemoveUserById(CurrentSession.User.Id);
             if (layerResult.Errors.Count > 0)
@@ -174,7 +180,7 @@ namespace MyEvernote.Controllers
                     return View(model);
                 }
 
-              CurrentSession.Set<EvernoteUser>("login",user.Result);//Session'a bilgi saklama
+                CurrentSession.Set<EvernoteUser>("login", user.Result);//Session'a bilgi saklama
                 return RedirectToAction("Index", "Home");
             }
 
@@ -270,27 +276,32 @@ namespace MyEvernote.Controllers
         }
 
 
-
-
-
-
-
-
         public ActionResult Select(int? id)
         {   /*Seçilen kategoriye göre listelemenin Tempdata kullanmadan yapılması*/
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //2.yöntem
+            //Category category = _categoryManager.Find(x => x.Id == id.Value);
+            //if (category == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            //}
+            //List<Note> notes =category.Notes.Where(x => x.isDraft == false).OrderByDescending(x => x.ModifiedOn);
+            List<Note> notes = _noteManager.ListQueryable().Where(x => x.isDraft == false && x.CategoryId == id)
+                .OrderByDescending(x => x.ModifiedOn).ToList();
+            return View("Index", notes);
+        }
 
-            Category category = _categoryManager.Find(x => x.Id == id.Value);
-            if (category == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
 
-
-            return View("Index", category.Notes.OrderByDescending(x => x.ModifiedOn));
+        public ActionResult HassError()
+        {
+            return View();
         }
     }
 }

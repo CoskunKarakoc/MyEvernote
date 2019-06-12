@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Yetkisiz Erişim!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h1 class="text-info"><span class="glyphicon glyphicon-remove-circle"></span> Yetkisiz Erişim</h1>
+        <p class="text-info">
+            Bu sayfaya erişim yetkiniz bulunmamaktadır.
+            <br /><br />
+        </p>
+        <p class="col-md-offset-2">
+            @Bootstrap.LinkButton("/Home/Index", "info", "", "", "home", "Ana Sayfaya Git!")
+        </p>
+    </div>
+</div>
+

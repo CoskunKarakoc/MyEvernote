@@ -44,7 +44,7 @@
             <!--Listeler-->
             @foreach (Note note in Model)
             {
-                <div class="col-sm-4 col-lg-4 col-md-4">
+                <div class="col-sm-4 col-lg-4 col-md-4" data-note-id="@note.Id">
                     <div class="thumbnail">
                         <img src="http://lorempixel.com/320/150/" alt="@note.Title">
                         <div class="caption">
@@ -54,7 +54,7 @@
                             </h5>
 
                             <h4>
-                                <a href="#">
+                                <a href="#" data-toggle="modal" data-target="#model_notedetail" data-note-id="@note.Id">
                                     @if (!string.IsNullOrEmpty(note.Title) && note.Title.Length > 10)
                                     {
                                         @(note.Title.Substring(0, 10) + "...")
@@ -71,7 +71,7 @@
                             {
 
                                 <p>@(note.Text.Substring(0, 100) + "...")</p>
-                                <p class="pull-right"><a href="#" class="btn btn-default btn-sm">Devamı <span class="glyphicon glyphicon-chevron-right"></span></a> </p>
+                                <p class="pull-right"><a href="#" data-toggle="modal" data-target="#model_notedetail" data-note-id="@note.Id" class="btn btn-default btn-sm">Devamı <span class="glyphicon glyphicon-chevron-right"></span></a> </p>
 
 
                             }
@@ -91,7 +91,10 @@
                                 </button>
                             </p>
                             <p>
-                                <button class="btn btn-default"> <span class="glyphicon glyphicon-star-empty"></span> @note.LikeCount</button>
+                                <button class="btn btn-default" data-liked="false" data-note-id="@note.Id">
+                                    <span class="glyphicon glyphicon-star-empty like-star"></span>&nbsp;
+                                    <span class="like-count"> @note.LikeCount</span>
+                                </button>
 
                             </p>
                         </div>
@@ -103,5 +106,10 @@
         </div>
     </div>
 </div>
+
+
 @Bootstrap.ModalPopup(id: "model_comment", title: "Yorumlar")
+@Bootstrap.ModalPopup(id: "model_notedetail", title: "Not Detay")
 <script src="~/Scripts/comment.js"></script>
+<script src="~/Scripts/like.js"></script>
+<script src="~/Scripts/NoteDetailPopup.js"></script>
